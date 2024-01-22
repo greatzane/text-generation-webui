@@ -33,7 +33,7 @@ settings = {
     'show_controls': True,
     'start_with': '',
     'mode': 'chat',
-    'chat_style': 'cai-chat',
+    'chat_style': 'messenger',
     'prompt-default': 'QA',
     'prompt-notebook': 'QA',
     'preset': 'simple-1',
@@ -63,6 +63,8 @@ settings = {
     'autoload_model': False,
     'gallery-items_per_page': 50,
     'gallery-open': False,
+    'knowledge_base': True, 
+    'knowledge_base_name': '',
     'default_extensions': ['gallery'],
 }
 

@@ -152,6 +152,8 @@ def list_interface_input_elements():
         'stream',
         'tfs',
         'top_a',
+        'knowledge_base', 
+        'knowledge_base_name', 
     ]
 
     # Chat elements

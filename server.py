@@ -171,6 +171,9 @@ def create_interface():
             ssl_certfile=shared.args.ssl_certfile
         )
 
+def launch_langchain_chatchat():
+    sys.path.append('../Langchain-Chatchat/')
+    import webui_langchain_chatchat
 
 if __name__ == "__main__":
 
@@ -252,6 +255,8 @@ if __name__ == "__main__":
     else:
         # Launch the web UI
         create_interface()
+        launch_langchain_chatchat()
+        
         while True:
             time.sleep(0.5)
             if shared.need_restart:
@@ -260,3 +265,6 @@ if __name__ == "__main__":
                 shared.gradio['interface'].close()
                 time.sleep(0.5)
                 create_interface()
+
+
+

@@ -28,7 +28,6 @@ from modules.utils import delete_file, get_available_characters, save_file
 # Copied from the Transformers library
 jinja_env = ImmutableSandboxedEnvironment(trim_blocks=True, lstrip_blocks=True)
 
-
 def str_presenter(dumper, data):
     """
     Copied from https://github.com/yaml/pyyaml/issues/240
@@ -74,8 +73,18 @@ def get_generation_prompt(renderer, impersonate=False, strip_trailing_spaces=Tru
 
     return prefix, suffix
 
+def get_local_doc_qa():
+    import sys
+    sys.path.append('/home/zane/large/Langchain-Chatchat/')
+    from chains.local_doc_qa import local_doc_qa
+    #local_doc_qa = LocalDocQA()
+    #local_doc_qa.init_cfg()
+    #print(local_doc_qa)
+    return local_doc_qa
+
 
 def generate_chat_prompt(user_input, state, **kwargs):
+
     impersonate = kwargs.get('impersonate', False)
     _continue = kwargs.get('_continue', False)
     also_return_rows = kwargs.get('also_return_rows', False)
@@ -111,6 +120,15 @@ def generate_chat_prompt(user_input, state, **kwargs):
             messages.insert(insert_pos, {"role": "user", "content": user_msg})
 
     user_input = user_input.strip()
+
+    if state['knowledge_base'] and len(state['knowledge_base_name']) > 0:
+        local_doc_qa = get_local_doc_qa()
+        resp, prompt = local_doc_qa.get_knowledge_based_content_test(
+            query=user_input, vs_path="../Langchain-Chatchat/knowledge_base/{}/vector_store".format(state['knowledge_base_name']), chunk_content=True)
+        print(resp)
+        if len(prompt) > 0:
+            user_input = "已知信息：\n{}\n\n根据已知信息回答：\n{}".format(prompt, user_input)
+
     if user_input and not impersonate and not _continue:
         messages.append({"role": "user", "content": user_input})
 
@@ -270,6 +288,9 @@ def chatbot_wrapper(text, state, regenerate=False, _continue=False, loading_mess
     prompt = apply_extensions('custom_generate_chat_prompt', text, state, **kwargs)
     if prompt is None:
         prompt = generate_chat_prompt(text, state, **kwargs)
+        print("+++++++++++++++++")
+        print(prompt)
+        print("-----------------")
 
     # Generate
     reply = None

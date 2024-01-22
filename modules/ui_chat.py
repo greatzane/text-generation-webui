@@ -84,6 +84,10 @@ def create_ui():
             shared.gradio['mode'] = gr.Radio(choices=['chat', 'chat-instruct', 'instruct'], value='chat', label='Mode', info='Defines how the chat prompt is generated. In instruct and chat-instruct modes, the instruction template selected under Parameters > Instruction template must match the current model.', elem_id='chat-mode')
             shared.gradio['chat_style'] = gr.Dropdown(choices=utils.get_available_chat_styles(), label='Chat style', value=shared.settings['chat_style'], visible=shared.settings['mode'] != 'instruct')
 
+        with gr.Row():
+            shared.gradio['knowledge_base'] = gr.Checkbox(value=shared.settings['knowledge_base'], label='With knowledge base', elem_id='knowledge-base')
+            shared.gradio['knowledge_base_name'] = gr.Textbox(label='Knowledge base name', placeholder='', value=shared.settings['knowledge_base_name'])
+
 
 def create_chat_settings_ui():
     mu = shared.args.multi_user
@@ -369,3 +373,4 @@ def create_event_handlers():
         lambda: None, None, None, _js=f'() => {{{ui.switch_tabs_js}; switch_to_notebook()}}')
 
     shared.gradio['show_controls'].change(None, gradio('show_controls'), None, _js=f'(x) => {{{ui.show_controls_js}; toggle_controls(x)}}')
+    #shared.gradio['knowledge_base'].change(None, gradio('knowledge_base'), None)
