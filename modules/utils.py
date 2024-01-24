@@ -132,3 +132,9 @@ def get_available_chat_styles():
 
 def get_available_grammars():
     return ['None'] + sorted([item.name for item in list(Path('grammars').glob('*.gbnf'))], key=natural_keys)
+
+
+def get_available_knowledge_base_names():
+    directory = '../Langchain-Chatchat/knowledge_base/'
+    subdirectories = [name for name in os.listdir(directory) if os.path.isdir(os.path.join(directory, name))]
+    return subdirectories

@@ -86,7 +86,7 @@ def create_ui():
 
         with gr.Row():
             shared.gradio['knowledge_base'] = gr.Checkbox(value=shared.settings['knowledge_base'], label='With knowledge base', elem_id='knowledge-base')
-            shared.gradio['knowledge_base_name'] = gr.Textbox(label='Knowledge base name', placeholder='', value=shared.settings['knowledge_base_name'])
+            shared.gradio['knowledge_base_name'] = gr.Dropdown(choices=utils.get_available_knowledge_base_names(), label='Knowledge base name', value=shared.settings['knowledge_base_name'])
 
 
 def create_chat_settings_ui():
