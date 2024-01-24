@@ -160,22 +160,16 @@ def generate_chat_prompt(user_input, state, **kwargs):
                 i += 1
                 
             if len(prompt) > 0:
-                user_input = "{}\n请根据已知信息回答：{}".format(prompt, user_input)
-        '''
-        local_doc_qa = get_local_doc_qa()
-        resp, prompt = local_doc_qa.get_knowledge_based_content_test(
-            query=user_input, vs_path="../Langchain-Chatchat/knowledge_base/{}/vector_store".format(state['knowledge_base_name']), chunk_content=False)
-        print(resp)
-        if len(prompt) > 0:
-            user_input = "已知信息：\n{}\n\n根据已知信息回答：\n{}".format(prompt, user_input)
-        '''
+                user_input = "{}\n请根据已知信息尽可能详细回答问题：{}".format(prompt, user_input)
 
     #print("user_input", user_input)
+    '''
     bgfile = "character_knowledge/{}.txt".format(state['knowledge_base_name'])
     if os.path.exists(bgfile):
         with open(bgfile, 'r') as f:
             content = f.read()
             user_input = "{}\n{}".format(content, user_input)
+    '''
 
     if user_input and not impersonate and not _continue:
         messages.append({"role": "user", "content": user_input})
