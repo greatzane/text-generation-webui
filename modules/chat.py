@@ -82,6 +82,32 @@ def get_local_doc_qa():
     #print(local_doc_qa)
     return local_doc_qa
 
+import os
+import pandas as pd
+character_knowledges = {}
+def get_knowledge(user_input, knowledge_base_name):
+    local_doc_qa = get_local_doc_qa()
+    resp, concated_text = local_doc_qa.get_knowledge_based_content_test(
+        query=user_input, vs_path="../Langchain-Chatchat/knowledge_base/{}/vector_store".format(knowledge_base_name), chunk_content=False)
+    
+    qa = []
+    if os.path.exists("character_knowledge/{}.csv".format(knowledge_base_name)):
+        if not knowledge_base_name in character_knowledges:
+            character_knowledges[knowledge_base_name] = {}
+            df = pd.read_csv("character_knowledge/{}.csv".format(knowledge_base_name), encoding="utf-8")
+            for index, row in df.iterrows():
+                character_knowledges[knowledge_base_name][row['q']] = row['a']
+
+        for doc in resp['source_documents']:
+            q = doc.page_content
+            if q in character_knowledges[knowledge_base_name]:
+                a = character_knowledges[knowledge_base_name][q]
+                qa.append([q, a])
+    else:
+        qa.append([user_input, concated_text])
+    #print("qa", qa)
+    return qa
+
 
 def generate_chat_prompt(user_input, state, **kwargs):
 
@@ -122,12 +148,34 @@ def generate_chat_prompt(user_input, state, **kwargs):
     user_input = user_input.strip()
 
     if state['knowledge_base'] and len(state['knowledge_base_name']) > 0:
+        qa = get_knowledge(user_input, state['knowledge_base_name'])
+        if len(qa) > 0:
+            prompt = ""
+            i = 0
+            for q in qa:
+                if i == 0:
+                    prompt += "已知信息：\n问：{}\n答：{}\n".format(q[0], q[1])
+                else:
+                    prompt += "问：{}\n答：{}\n".format(q[0], q[1])
+                i += 1
+                
+            if len(prompt) > 0:
+                user_input = "{}\n请根据已知信息回答：{}".format(prompt, user_input)
+        '''
         local_doc_qa = get_local_doc_qa()
         resp, prompt = local_doc_qa.get_knowledge_based_content_test(
-            query=user_input, vs_path="../Langchain-Chatchat/knowledge_base/{}/vector_store".format(state['knowledge_base_name']), chunk_content=True)
+            query=user_input, vs_path="../Langchain-Chatchat/knowledge_base/{}/vector_store".format(state['knowledge_base_name']), chunk_content=False)
         print(resp)
         if len(prompt) > 0:
             user_input = "已知信息：\n{}\n\n根据已知信息回答：\n{}".format(prompt, user_input)
+        '''
+
+    #print("user_input", user_input)
+    bgfile = "character_knowledge/{}.txt".format(state['knowledge_base_name'])
+    if os.path.exists(bgfile):
+        with open(bgfile, 'r') as f:
+            content = f.read()
+            user_input = "{}\n{}".format(content, user_input)
 
     if user_input and not impersonate and not _continue:
         messages.append({"role": "user", "content": user_input})
