@@ -47,12 +47,12 @@ settings = {
     'truncation_length_max': 200000,
     'max_tokens_second': 0,
     'max_updates_second': 0,
-    'custom_stopping_strings': '',
+    'custom_stopping_strings': '"<|im_end|>","</s>"',
     'custom_token_bans': '',
     'auto_max_new_tokens': False,
     'ban_eos_token': False,
     'add_bos_token': True,
-    'skip_special_tokens': True,
+    'skip_special_tokens': False,
     'stream': True,
     'character': 'story01助手',
     'name1': '侦探',
@@ -64,7 +64,7 @@ settings = {
     'gallery-items_per_page': 50,
     'gallery-open': False,
     'knowledge_base': True, 
-    'knowledge_base_name': '',
+    'knowledge_base_name': 'story01_assistant',
     'default_extensions': ['gallery'],
 }
 

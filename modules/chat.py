@@ -682,6 +682,8 @@ def load_character(character, name1, name2):
             break
 
     if filepath is None or not filepath.exists():
+        import traceback
+        traceback.print_stack()
         logger.error(f"Could not find the character \"{character}\" inside characters/. No character has been loaded.")
         raise ValueError
 
@@ -718,7 +720,7 @@ def load_character(character, name1, name2):
 
 
 def load_instruction_template(template):
-    for filepath in [Path(f'instruction-templates/{template}.yaml'), Path('instruction-templates/Alpaca.yaml')]:
+    for filepath in [Path(f'instruction-templates/{template}.yaml')]: #, Path('instruction-templates/Alpaca.yaml')]:
         if filepath.exists():
             break
     else:
