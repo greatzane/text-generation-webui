@@ -77,12 +77,15 @@ def create_ui():
                     shared.gradio['rename_to-confirm'] = gr.Button('Confirm', visible=False, elem_classes='refresh-button')
                     shared.gradio['rename_to-cancel'] = gr.Button('Cancel', visible=False, elem_classes='refresh-button')
 
-        with gr.Row():
-            shared.gradio['start_with'] = gr.Textbox(label='Start reply with', placeholder='Sure thing!', value=shared.settings['start_with'])
+                with gr.Accordion("More settings", open=False, elem_id='more-settings-element'):
+                    with gr.Row():
+                        shared.gradio['start_with'] = gr.Textbox(label='Start reply with', placeholder='Sure thing!', value=shared.settings['start_with'])
 
-        with gr.Row():
-            shared.gradio['mode'] = gr.Radio(choices=['chat', 'chat-instruct', 'instruct'], value='chat', label='Mode', info='Defines how the chat prompt is generated. In instruct and chat-instruct modes, the instruction template selected under Parameters > Instruction template must match the current model.', elem_id='chat-mode')
-            shared.gradio['chat_style'] = gr.Dropdown(choices=utils.get_available_chat_styles(), label='Chat style', value=shared.settings['chat_style'], visible=shared.settings['mode'] != 'instruct')
+                    with gr.Row():
+                        shared.gradio['mode'] = gr.Radio(choices=['chat', 'chat-instruct', 'instruct'], value='chat', label='Mode', info='Defines how the chat prompt is generated. In instruct and chat-instruct modes, the instruction template selected under Parameters > Instruction template must match the current model.', elem_id='chat-mode')
+
+                    with gr.Row():
+                        shared.gradio['chat_style'] = gr.Dropdown(choices=utils.get_available_chat_styles(), label='Chat style', value=shared.settings['chat_style'], visible=shared.settings['mode'] != 'instruct')
 
         with gr.Row():
             shared.gradio['knowledge_base'] = gr.Checkbox(value=shared.settings['knowledge_base'], label='With knowledge base', elem_id='knowledge-base')
@@ -104,6 +107,7 @@ def create_chat_settings_ui():
                 shared.gradio['name2'] = gr.Textbox(value='', lines=1, label='Character\'s name')
                 shared.gradio['context'] = gr.Textbox(value='', lines=10, label='Context', elem_classes=['add_scrollbar'])
                 shared.gradio['greeting'] = gr.Textbox(value='', lines=5, label='Greeting', elem_classes=['add_scrollbar'])
+                shared.gradio['character_knowledge_base_name'] = gr.Dropdown(choices=utils.get_available_knowledge_base_names(), label='Knowledge base name')
 
             with gr.Column(scale=1):
                 shared.gradio['character_picture'] = gr.Image(label='Character picture', type='pil', interactive=not mu)
@@ -285,7 +289,7 @@ def create_event_handlers():
         lambda: None, None, None, _js=f'() => {{{ui.switch_tabs_js}; switch_to_chat()}}')
 
     shared.gradio['character_menu'].change(
-        chat.load_character, gradio('character_menu', 'name1', 'name2'), gradio('name1', 'name2', 'character_picture', 'greeting', 'context')).success(
+        chat.load_character, gradio('character_menu', 'name1', 'name2'), gradio('name1', 'name2', 'character_picture', 'greeting', 'context', 'character_knowledge_base_name', 'knowledge_base_name')).success(
         ui.gather_interface_values, gradio(shared.input_elements), gradio('interface_state')).then(
         chat.load_latest_history, gradio('interface_state'), gradio('history')).then(
         chat.redraw_html, gradio(reload_arr), gradio('display')).then(
@@ -304,7 +308,7 @@ def create_event_handlers():
 
     # Save/delete a character
     shared.gradio['save_character'].click(
-        lambda x: x, gradio('name2'), gradio('save_character_filename')).then(
+        lambda x: x, gradio('character_menu'), gradio('save_character_filename')).then(
         lambda: gr.update(visible=True), None, gradio('character_saver'))
 
     shared.gradio['delete_character'].click(lambda: gr.update(visible=True), None, gradio('character_deleter'))

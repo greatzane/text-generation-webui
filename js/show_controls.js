@@ -12,6 +12,11 @@ function toggle_controls(value) {
     document.getElementById("chat-col").classList.remove("bigchat");
     document.getElementById("chat-tab").style.paddingBottom = "";
 
+    let more_settings_element = document.getElementById("more-settings-element")
+    if (more_settings_element) {
+      more_settings_element.style.display = "block"
+    }
+
     let gallery_element = document.getElementById("gallery-extension");
     if (gallery_element) {
       gallery_element.style.display = "block";

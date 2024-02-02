@@ -62,7 +62,7 @@ settings = {
     'chat-instruct_command': 'Continue the chat dialogue below. Write a single reply for the character "<|character|>".\n\n<|prompt|>',
     'autoload_model': False,
     'gallery-items_per_page': 50,
-    'gallery-open': False,
+    'gallery-open': True,
     'knowledge_base': True, 
     'knowledge_base_name': 'story01_assistant',
     'default_extensions': ['gallery'],

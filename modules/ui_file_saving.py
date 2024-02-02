@@ -59,7 +59,7 @@ def create_event_handlers():
     shared.gradio['save_cancel'].click(lambda: gr.update(visible=False), None, gradio('file_saver'))
 
     shared.gradio['save_character_confirm'].click(
-        chat.save_character, gradio('name2', 'greeting', 'context', 'character_picture', 'save_character_filename'), None).then(
+        chat.save_character, gradio('name2', 'greeting', 'context', 'character_picture', 'character_knowledge_base_name', 'save_character_filename'), None).then(
         lambda: gr.update(visible=False), None, gradio('character_saver')).then(
         lambda x: gr.update(choices=utils.get_available_characters(), value=x), gradio('save_character_filename'), gradio('character_menu'))
 

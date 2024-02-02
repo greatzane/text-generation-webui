@@ -19,7 +19,7 @@ document.querySelector('.header_bar').addEventListener('click', function(event) 
         let chat_visible = (buttonText == 'Chat');
         let default_visible = (buttonText == 'Default');
         let notebook_visible = (buttonText == 'Notebook');
-        let chat_mode_visible = (chat_mode_element.offsetHeight > 0 && chat_mode_element.offsetWidth > 0);
+        let chat_mode_visible = true //(chat_mode_element.offsetHeight > 0 && chat_mode_element.offsetWidth > 0);
 
         // Only show this extension in the Chat tab
         if (chat_visible) {

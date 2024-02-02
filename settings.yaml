@@ -65,7 +65,7 @@ chat_template_str: |-
 chat-instruct_command: "\u7EE7\u7EED\u4E0B\u9762\u7684\u5BF9\u8BDD\uFF0C\u8BF7\u5199\u51FA\u89D2\u8272 \"<|character|>\"\u7684\u56DE\u7B54\u3002\n\n<|prompt|>"
 autoload_model: false
 gallery-items_per_page: 50
-gallery-open: false
+gallery-open: true
 knowledge_base: true
 knowledge_base_name: story01_assistant
 default_extensions:

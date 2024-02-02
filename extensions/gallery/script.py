@@ -104,7 +104,7 @@ def custom_js():
 
 
 def ui():
-    with gr.Accordion("Character gallery", open=settings["gallery-open"], elem_id='gallery-extension'):
+    with gr.Box(elem_id='gallery-extension'): #gr.Accordion("Character gallery", open=settings["gallery-open"], elem_id='gallery-extension'):
         gr.HTML(value="<style>" + generate_css() + "</style>")
         with gr.Row():
             filter_box = gr.Textbox(label='', placeholder='Filter', lines=1, max_lines=1, container=False, elem_id='gallery-filter-box')

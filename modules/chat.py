@@ -716,7 +716,11 @@ def load_character(character, name1, name2):
         greeting_field = 'char_greeting'
 
     greeting = data.get(greeting_field, greeting)
-    return name1, name2, picture, greeting, context
+    if 'character_knowledge_base_name' in data:
+        character_knowledge_base_name = data['character_knowledge_base_name'].strip()
+    else:
+        character_knowledge_base_name = ""
+    return name1, name2, picture, greeting, context, character_knowledge_base_name, character_knowledge_base_name
 
 
 def load_instruction_template(template):
@@ -822,11 +826,12 @@ def upload_your_profile_picture(img):
         logger.info(f'Profile picture saved to "{cache_folder}/pfp_me.png"')
 
 
-def generate_character_yaml(name, greeting, context):
+def generate_character_yaml(name, greeting, context, character_knowledge_base_name):
     data = {
         'name': name,
         'greeting': greeting,
         'context': context,
+        'character_knowledge_base_name': character_knowledge_base_name, 
     }
 
     data = {k: v for k, v in data.items() if v}  # Strip falsy
@@ -841,12 +846,12 @@ def generate_instruction_template_yaml(instruction_template):
     return my_yaml_output(data)
 
 
-def save_character(name, greeting, context, picture, filename):
+def save_character(name, greeting, context, picture, character_knowledge_base_name, filename):
     if filename == "":
         logger.error("The filename is empty, so the character will not be saved.")
         return
 
-    data = generate_character_yaml(name, greeting, context)
+    data = generate_character_yaml(name, greeting, context, character_knowledge_base_name)
     filepath = Path(f'characters/{filename}.yaml')
     save_file(filepath, data)
     path_to_img = Path(f'characters/{filename}.png')
