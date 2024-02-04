@@ -217,6 +217,8 @@ def chat_completions_common(body: dict, is_legacy: bool = False, stream=False) -
 
     # generation parameters
     generate_params = process_parameters(body, is_legacy=is_legacy)
+    #print("body", body)
+    #print("generate_params", generate_params)
     continue_ = body['continue_']
 
     # Instruction template
@@ -236,10 +238,11 @@ def chat_completions_common(body: dict, is_legacy: bool = False, stream=False) -
     character = body['character'] or shared.settings['character']
     character = "Assistant" if character == "None" else character
     name1 = body['user_name'] or shared.settings['name1']
-    name1, name2, _, greeting, context = load_character_memoized(character, name1, '')
+    name1, name2, _, greeting, context, knowledge_base_name, _ = load_character_memoized(character, name1, '')
     name2 = body['bot_name'] or name2
     context = body['context'] or context
     greeting = body['greeting'] or greeting
+    knowledge_base_name = body['knowledge_base_name'] or knowledge_base_name
 
     # History
     user_input, custom_system_message, history = convert_history(messages)
@@ -255,7 +258,9 @@ def chat_completions_common(body: dict, is_legacy: bool = False, stream=False) -
         'chat_template_str': chat_template_str,
         'chat-instruct_command': chat_instruct_command,
         'history': history,
-        'stream': stream
+        'stream': stream, 
+        'knowledge_base': True, 
+        'knowledge_base_name': knowledge_base_name, 
     })
 
     max_tokens = generate_params['max_new_tokens']
@@ -293,6 +298,7 @@ def chat_completions_common(body: dict, is_legacy: bool = False, stream=False) -
         yield chat_streaming_chunk('')
 
     # generate reply #######################################
+    print("generate_params", generate_params)
     prompt = generate_chat_prompt(user_input, generate_params)
     token_count = len(encode(prompt)[0])
     debug_msg({'prompt': prompt, 'generate_params': generate_params})

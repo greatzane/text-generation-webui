@@ -130,3 +130,9 @@ pydantic~=1.10.7
 starlette~=0.26.1
 tenacity~=8.2.2
 charset_normalizer==2.1.0
+
+# openai api
+SpeechRecognition==3.10.0
+flask_cloudflared==0.0.14
+sse-starlette==1.6.5
+tiktoken

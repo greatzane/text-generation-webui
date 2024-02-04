@@ -41,7 +41,7 @@ class GenerationOptions(BaseModel):
     auto_max_new_tokens: bool = False
     ban_eos_token: bool = False
     add_bos_token: bool = True
-    skip_special_tokens: bool = True
+    skip_special_tokens: bool = False
     grammar_string: str = ""
 
 
@@ -87,7 +87,7 @@ class ChatCompletionRequestParams(BaseModel):
     max_tokens: int | None = None
     n: int | None = Field(default=1, description="Unused parameter.")
     presence_penalty: float | None = 0
-    stop: str | List[str] | None = None
+    stop: str | List[str] | None = ["<|im_end|>", "</s>"]
     stream: bool | None = False
     temperature: float | None = 1
     top_p: float | None = 1
@@ -108,6 +108,7 @@ class ChatCompletionRequestParams(BaseModel):
     chat_instruct_command: str | None = None
 
     continue_: bool = Field(default=False, description="Makes the last bot message in the history be continued instead of starting a new message.")
+    knowledge_base_name: str | None = None
 
 
 class ChatCompletionRequest(GenerationOptions, ChatCompletionRequestParams):
